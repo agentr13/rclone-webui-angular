@@ -38,8 +38,7 @@ jobs:
           zip -r embed.zip build
           mkdir -p release/${{ github.ref_name }}
           mv embed.zip release/${{ github.ref_name }}/embed.zip
-          echo '{"tag_name":"${{ github.ref_name }}","assets":[{"browser_download_url":"https://s3.yuudi.dev/rwa/embed/${{ github.ref_name }}/embed.zip"}]}' > release/version.json
-
+          
       - name: Create Release
         id: create_release
         uses: actions/create-release@v1
@@ -65,9 +64,3 @@ jobs:
           asset_path: ./dist/release/${{ github.ref_name }}/embed.zip
           asset_name: embed.zip
           asset_content_type: application/zip
-
-      - name: Upload to S3
-        uses: docker://rclone/rclone:latest
-        with:
-          args: |
-            ${{ secrets.S3_ARGS }} copy dist/release :s3:yuudi/rwa/embed
